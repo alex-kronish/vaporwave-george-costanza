@@ -1,0 +1,7 @@
+{"_comment": "add real api keys, then rename this to config_secret.json",
+"discord_id": "Vaporwave George Costanza#9599",
+"discord_client_id":"123456",
+"discord_client_secret": "abcdefghijk",
+"discord_token": "dIsCoRdToKeN.Is.ThE.ImpOrtant.OnE",
+"talk_in": ["everything","general","the-clown-box","general-games"],
+"markov_excluded_words": ["an array of bad words to exclude from the markov file"]}
