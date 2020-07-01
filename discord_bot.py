@@ -63,7 +63,7 @@ async def on_message(msg):
             await msg.channel.send(butt)
         return
     elif rng_calculator == 20:
-        h.logger("RNG = 20, Markov Gibberish function activated")
+        h.logger("RNG = 20, Markov Gibberish function activated", "Info")
         markov_string = m.generate_sentence()
         await msg.channel.send(markov_string)
         return

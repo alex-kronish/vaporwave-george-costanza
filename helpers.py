@@ -19,6 +19,7 @@ class Helpers:
 
     def markov_add(self, m, txt, exclusion):
         # ok i think it's probably for the best if we scrub out any URL's before sending it to the markov chainer
+        txt = txt.replace("\n", " ").replace("\r", " ")
         txt_cleaned = re.sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", "", txt)
         if len(txt_cleaned) == 0:
             # if we clean the URL and we have an empty string, then that means that was the only thing in the message
@@ -87,8 +88,8 @@ class Helpers:
         # why does the built in logging module not work writing to a file, i dont get it.
         logfile = open("georgie.log", "at+")
         ts = str(datetime.datetime.now())
-        log_string = ts + " | " + level + " | " + msg+"\n"
+        log_string = ts + " | " + level + " | " + msg
         print(log_string)
-        logfile.write(log_string)
+        logfile.write(log_string + "\n")
         logfile.close()
         return None
