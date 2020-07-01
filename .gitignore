@@ -1,3 +1,5 @@
 /config/config_secret.json
 /venv/
 .idea
+markov-brain/markov_brain.txt
+__pycache__

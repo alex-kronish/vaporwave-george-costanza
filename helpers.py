@@ -1,3 +1,4 @@
+import datetime
 import re
 import random
 
@@ -7,9 +8,13 @@ class Helpers:
         pass
 
     def markov_startup(self, m):
+        linect = 0
         f = open("markov-brain//markov_brain.txt", "rt+")
         for line in f:
             m.add_text(line)
+            linect = linect + 1
+        self.logger("Startup activity: loaded the markov_brain.txt file into the Markov chainer. Loaded " \
+                    + str(linect) + " lines of text.", "Info")
         f.close()
 
     def markov_add(self, m, txt, exclusion):
@@ -19,16 +24,19 @@ class Helpers:
             # if we clean the URL and we have an empty string, then that means that was the only thing in the message
             # and there's no sense in adding it...
             # print("Just a test, should be a blank string if only a URL was sent : "+txt_cleaned)
+            self.logger("We got a request to add an empty string to the markov brain, it was probably a URL. "
+                        "Ignoring it.", "Info")
             return
         for w in exclusion:
             if w in txt_cleaned:
-                print("OK we found an excluded word, we're not going to add this one. For debugging purposes")
-                print("the entire string is: " + txt)
+                self.logger("We found a word that's in the markov exclusion list.", "Warn")
+                self.logger("the entire string is: " + txt, "Warn")
                 return
         f = open("markov-brain//markov_brain.txt", "at+")
         f.write("\n" + txt_cleaned)
         f.close()
         m.add_text(txt_cleaned)
+        self.logger("Added a line to the Markov chainer.", "Info")
 
     def butt_replace(self, txt):
         exclf = open("config//butt_exclusions.txt", "rt+")
@@ -40,15 +48,17 @@ class Helpers:
         victim = 0  # pycharm gets mad without this but its not required
         for w in txt_arr:
             if w.lower() == 'butt':
-                print("the word butt already exists in the input")
+                self.logger("the word butt already exists in the input", "info")
                 return
         sentence_length = len(txt_arr)
         if sentence_length == 0:
             # something has gone wrong if we are in here, i have no idea how we could've gotten a blank input
+            self.logger("Somehow we got a request to replace butt with an empty string.", "Error")
             return "butt ass??????"
         # if there's only one word in the message, it's not really a good candidate for butt replacement
         # this will also completely break the random number generator anyway
         if sentence_length == 1:
+            self.logger("We got a request to replace butt in a string that is only one word long.", "Info")
             return
         loop = True
         while loop:
@@ -72,3 +82,13 @@ class Helpers:
         for word in txt_arr:
             s = s + word + " "
         return s.strip()
+
+    def logger(self, msg, level):
+        # why does the built in logging module not work writing to a file, i dont get it.
+        logfile = open("georgie.log", "at+")
+        ts = str(datetime.datetime.now())
+        log_string = ts + " | " + level + " | " + msg+"\n"
+        print(log_string)
+        logfile.write(log_string)
+        logfile.close()
+        return None
